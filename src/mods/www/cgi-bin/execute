@@ -1,0 +1,50 @@
+#!/bin/bash
+
+function cgi_decodevar()
+{
+    [ $# -ne 1 ] && return
+    local v t h
+    # replace all + with whitespace and append %%
+    t="${1//+/ }%%"
+    while [ ${#t} -gt 0 -a "${t}" != "%" ]; do
+        v="${v}${t%%\%*}" # digest up to the first %
+        t="${t#*%}"       # remove digested part
+        # decode if there is anything to decode and if not at end of string
+        if [ ${#t} -gt 0 -a "${t}" != "%" ]; then
+            h=${t:0:2} # save first two chars
+            t="${t:2}" # remove these
+            v="${v}"`echo -e \\\\x${h}` # convert hex to special char
+        fi
+    done
+    # return decoded string
+    echo "${v}"
+    return
+}
+                                                                                                                                                                                                
+for p in ${QUERY_STRING//&/ };do kvp=( ${p/=/ } ); k=${kvp[0]};v=${kvp[1]};eval $k=$v;done                                                                                                      
+exc=`cgi_decodevar $rawcmd`                                                                                                                                                                     
+
+echo "Status: 200 OK"
+echo ""
+echo "<html>"
+echo "<body><a href='/'>Return to the home page</a><div style='border: 1px solid gray; padding: 2mm; margin: 2mm; background: #f0f0f0'><pre>"
+echo "Executing: " $exc
+bash -c "$exc" 2>&1
+echo "</pre></div><a href='/'>Return to the home page</a></body>"
+if [ "$ret" = "10" ]; then
+    echo "<meta http-equiv=\"refresh\" content=\"10;url=/\" />"
+fi
+if [ "$ret" = "5" ]; then
+    echo "<meta http-equiv=\"refresh\" content=\"5;url=/\" />"
+fi
+if [ "$ret" = "3" ]; then
+    echo "<meta http-equiv=\"refresh\" content=\"3;url=/\" />"
+fi
+if [ "$ret" = "2" ]; then
+    echo "<meta http-equiv=\"refresh\" content=\"2;url=/\" />"
+fi
+if [ "$ret" = "1" ]; then
+    echo "<meta http-equiv=\"refresh\" content=\"1;url=/\" />"
+fi
+echo "</html>"
+

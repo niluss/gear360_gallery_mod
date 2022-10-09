@@ -1,0 +1,18 @@
+#!/bin/bash
+modecode=`prefman get 0 0x00004445 b|grep -o "0x.."`
+if [ "$modecode" = "0x00" ]; then
+	echo "Video"
+fi
+if [ "$modecode" = "0x01" ]; then
+        echo "Photo"
+fi
+if [ "$modecode" = "0x02" ]; then
+        echo "Time Lapse"
+fi
+if [ "$modecode" = "0x03" ]; then
+        echo "Looping Video"
+fi
+if [ "$modecode" = "0x04" ]; then
+        echo "Landscape HDR"
+fi
+

@@ -1,0 +1,128 @@
+#!/bin/bash
+
+BASEPATH=/sdcard/DCIM
+JHEAD=/sdcard/mods/jhead
+RM=/bin/rm
+startfrom=$(echo "$QUERY_STRING" | sed -n 's/^.*startfrom=\([^&]*\).*$/\1/p' | sed "s/%20/ /g")
+getfile=$(echo "$QUERY_STRING" | sed -n 's/^.*getfile=\([^&]*\).*$/\1/p' | sed "s/%20/ /g")
+vidfile=$(echo "$QUERY_STRING" | sed -n 's/^.*vidfile=\([^&]*\).*$/\1/p' | sed "s/%20/ /g")
+thumbfile=$(echo "$QUERY_STRING" | sed -n 's/^.*thumbfile=\([^&]*\).*$/\1/p' | sed "s/%20/ /g")
+rmfile=$(echo "$QUERY_STRING" | sed -n 's/^.*rmfile=\([^&]*\).*$/\1/p' | sed "s/%20/ /g")
+rmfileyes=$(echo "$QUERY_STRING" | sed -n 's/^.*rmfileyes=\([^&]*\).*$/\1/p' | sed "s/%20/ /g")
+
+if [[ $thumbfile ]]; then
+echo
+$JHEAD -st - "$thumbfile"
+exit 0
+fi
+
+if [[ $getfile ]]; then
+echo -n "Content-Disposition: inline; filename=\""
+echo -n `basename $getfile`
+echo "\""
+echo 
+cat "$getfile" 
+exit 0
+fi
+
+if [[ $vidfile ]]; then
+echo -n "Content-Disposition: inline; filename=\""
+echo -n `basename $vidfile`
+echo "\""
+echo -n "Content-Type: video/mp4; Content-Name=\""
+echo -n `basename $vidfile`
+echo "\""
+echo 
+cat "$vidfile" 
+exit 0
+fi
+
+
+echo
+echo "
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gear 360 Gallery Mod</title>
+<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.png\">
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">
+<meta name=\"viewport\" content=\"user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1\">
+<meta name=\"mobile-web-app-capable\" content=\"no\">
+<link rel=\"stylesheet\" type=\"text/css\" href=\"/gallery.css\">
+<script src=\"/jquery-3.6.1.min.js\"></script>
+<script src=\"/hammer.min.js\"></script>
+<script src=\"/three.min.js\"></script>
+<script src=\"/js/postprocessing/EffectComposer.js\"></script>
+<script src=\"/js/postprocessing/RenderPass.js\"></script>
+<script src=\"/js/postprocessing/ShaderPass.js\"></script>
+<script src=\"/js/shaders/CopyShader.js\"></script>
+<script src=\"/js/shaders/FXAAShader.js\"></script>
+<script src=\"/gallery.js\"></script>
+<script src=\"/gallery-3d.js\"></script>
+<script>
+window.G = Viewer.instance;
+</script>
+</head>
+<body>";
+
+if [[ $rmfile ]]; then
+echo "<div class=\"rounded_gray\">"
+
+  if [[ $rmfileyes ]]; then
+  
+    $RM "$rmfile"
+	
+	echo "<br/>File $rmfile deleted successfully <br/><br/>"
+	echo "<a href=\"/cgi-bin/gallery\" class=\"rounded_gray\">Go back to Gallery</a> &nbsp; ";
+	
+  else
+	echo "<br/>Delete $rmfile ? <br/>"
+	echo "<a href=\"?rmfile=$rmfile&rmfileyes=1\" class=\"rounded_red\">YES</a> &nbsp; ";
+	echo "<a href=\"#\" class=\"rounded_yellow\" onclick=\"window.history.back();\">NO</a><br/>";
+  fi
+  
+echo "</div>"
+echo "</body>"
+
+exit 0
+fi
+
+
+echo "<div style=\"margin: -10px;\"><div class=\"rounded_gray\"><a href=\"/settings.html\">Settings</a></div>";
+echo "<div style=\"float: right;\"class=\"rounded_gray\"><a href=\"/cgi-bin/execute?rawcmd=killall+httpd\" onclick=\"return confirm('Are you sure you want to end the gallery process?')\">End Gallery</a></div></div>";
+
+
+for dirs in `find $BASEPATH \( -iname '*.JPG' -or -iname '*.SRW' -or -iname '*.MP4' \) -printf '%h\n' | sort -u -r`; do
+        files=("$dirs"/*.{JPG,SRW,MP4,jpg,jpeg,srw,mp4"${#files[@]}"})
+        #adirname=`basename $dirs`
+        if [[ $adirname != .* ]]; then
+			if [[ $dirs ]]; then
+			  let i=0
+			  for filename in `ls $dirs/*.{JPG,jpg,JPEG,jpeg,MP4,mp4}|sort -r`; do
+				let i=i+1
+				if (( i <= startfrom + 10 && i>startfrom)); then 
+					echo "<div filename=\""`basename "$filename"`"\" filepath=\"$filename\" filetime=\""`stat -c %y $filename|cut -c 3-16`" "`du -sk $filename|cut -b -4`"\">&nbsp;</div>";
+				fi
+			  done
+
+			  echo "<br/>"
+			  
+			  if (( startfrom >= 10 )); then
+					let nextstart=startfrom-10
+					echo "<div class=\"rounded_gray\"><a href=\"?startfrom="$nextstart"\">Previous 10</a></div>"
+			  fi
+
+			  if (( i >= startfrom + 10)); then
+					let nextstart=startfrom+10
+					echo "<div class=\"rounded_gray\"><a href=\"?startfrom="$nextstart"\">Next 10</a></div>"
+			  fi
+			  
+			  exit 0      
+			fi
+        fi
+done
+
+	
+
+echo "</body></html>"
+
