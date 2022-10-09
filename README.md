@@ -21,8 +21,10 @@ Features of this mod:
 Limitations:
 - No stitching available
 - Video thumbnail is slow as it tries to load part of the video. There is currently no thumbnail generator for video.
-- 360 preview for Video is buggy. Only works for 30fps and SAM videos.
+- 360 preview for Video is buggy depending on the browser. Only works for 30fps and SAM videos.
 
+Current issues:
+- jumpy pinch zoom on mobile, and maybe too sensitive
 
 
 Instructions:
