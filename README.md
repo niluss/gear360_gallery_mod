@@ -1,4 +1,4 @@
-This is a Fork of https://github.com/ottokiksmaler/gear360_modding
+This is a Fork of https://github.com/ottokiksmaler/gear360_modding for the Samsung Gear 360
 
 I only updated Gallery and added 360 Viewer and Delete functionality.
 
