@@ -43,3 +43,6 @@ For devs:
 - See https://github.com/niluss/gear360_gallery_mod/blob/master/src/mods/www/gallery-3d.js for the shader implementation. This all guesswork. But basically a pixel's angle from Z-axis is directly proportional to how far it should be from the center of the raw image. And vertex shader just tries to push vertices on the outer edges to move forward same to camera direction to make them more visible.
 - 360 Viewer is done by the use of three.js. Checkout https://github.com/mrdoob/three.js/ for more info.
 - Used https://hammerjs.github.io/ for pinch zoom/in
+
+
+If you'd like to donate, I'd appreciate it :) -> [DONATE](https://www.paypal.com/donate/?business=SAD76KF74JL3U&no_recurring=1&item_name=I+hope+I+made+your+day+today%21&currency_code=USD)
