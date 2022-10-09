@@ -10,6 +10,7 @@ Features of this mod:
 - Gallery is shown by default instead of the settings.
 - Gallery css updated
 - 360 Viewer on click of thumbnail for photos and videos. This is done via browsers OpenGL GLSL shaders, so no stitching needed. Tested on Chrome desktop (works better) and mobile.
+- To close 360 view, click X on top right. It maybe hard to see, but there is!
 - Download of file by clicking the Filename instead of thumbnail
 - Added Delete button
 - Added Button to kill the gallery process (maybe it will save battery, not really sure)
