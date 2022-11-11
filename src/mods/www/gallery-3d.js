@@ -187,7 +187,7 @@ void main() {
 				outerPixelPushOutwardFactor: {value: 1.0},
 				tex: {value: this.texture}, 
 			};
-			this.setWideness();
+			this.setWideness('ultra');
 			
 			this.composer = new THREE.EffectComposer( this.renderer );
 		
