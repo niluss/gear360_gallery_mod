@@ -81,20 +81,6 @@ void main() {
 		float f = capValue((r - blurAtRadius) / range);
 		color = mix(color, color2, f / 2.0);
 	}
-	/*
-	vec3 pos = normalize(vPosition);
-	if (pos.y <= -blurBottomRadius) {
-		float range = 1.0 - blurBottomRadius;
-		float f = capValue(-(blurBottomRadius + pos.y) / range);
-		vec3 bPos = vPosition;
-		bPos.z *= -1.0;
-		//bPos.xz = -bPos.xz;
-		vec2 uv3 = toUV(bPos, r);
-		vec3 color3 = texture2D(tex, uv3).rgb;
-		color = mix(color, color3, f / 2.0);
-		color *= (1.0 - f);
-	}
-	*/
 	fragColor = vec4( color, 1.0 );
 }`;
 
