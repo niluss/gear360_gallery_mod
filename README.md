@@ -5,8 +5,14 @@ I only updated Gallery and added 360 Viewer and Delete functionality.
 Please see ottokiksmaler for more detailed commands and modding information.
 
 
+Latest Updates (Nov 15, 2022):
+- Fixed pinch zoom on mobile
+- mild vignette fix
+- Added open360.htm file. You can use this to open unstitched files locally. See details on Instructions
+
 
 Features of this mod:
+- Added open360.htm to open unstitched local files.
 - Gallery is shown by default instead of the settings.
 - Gallery css updated
 - 360 Viewer on click of thumbnail for photos and videos. This is done via browsers OpenGL GLSL shaders (version 3), so no stitching needed. Tested on Chrome desktop (works better) and mobile.
@@ -31,7 +37,7 @@ Limitations:
 - 360 preview for Video is buggy depending on the browser. Only works for 30fps and SAM videos.
 
 Current issues:
-- jumpy pinch zoom on mobile, and maybe too sensitive
+- No playback controls
 
 
 
@@ -45,6 +51,13 @@ Instructions:
 - Connect to the Wi-Fi access point created by the camera (Gear 360), the password is shown on the camera screen.
 - Open the browser and go to http://192.168.43.1:8888 (assuming your camera is also using 192.168.43.1 as the IP, it seems all are, but you can check yout IP from GUI or from the command line by typing ```ipconfig``` on Windows or ```ifconfig``` or ```ip addr ls``` on Linux.
 
+
+Instructions to use open360.htm to view unstitched files locally:
+- Copy the contents of www directory into your device pc/mobile
+- Copy your unstitched files from the Gear 360 to your pc/mobile
+- Install an http server (like Servez on windows, or HTTP File Server on Android)
+- Start the http server and browse the open360.htm via the browser.
+- Tap the icon on the page, and open a 360 image or video to view. It will show the same 360 viewer.
 
 
 For devs:
