@@ -9,6 +9,7 @@ Latest Updates (Nov 15, 2022):
 - Fixed pinch zoom on mobile
 - mild vignette fix
 - Added open360.htm file. You can use this to open unstitched files locally. See details on Instructions
+- Added fullscreen upon viewing an image or video
 
 
 Features of this mod:
@@ -38,6 +39,7 @@ Limitations:
 
 Current issues:
 - No playback controls
+- First view does not trigger the Fullscreen mode.
 
 
 
