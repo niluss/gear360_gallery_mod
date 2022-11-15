@@ -12,28 +12,37 @@ function hideFile() {
 	$vid[0].src = '';
 	$img[0].src = '';
 	curFile = null;
+	if (document.fullscreenElement) document.exitFullscreen();
 }
-function showFile(thiz) {
+function showFile(thiz, type) {
 	hideFile();
-	curFile = thiz;
 	$divShow.empty();
 	$divShow.append($divClose);
-	var is360 = curFile.parentNode.getAttribute('fname').startsWith("360");
-	var isVideo = curFile.tagName == 'VIDEO';
-	var textureSource = null;
-	if (isVideo) {
-		if (curFile.readyState === 4) {
-			$divShow.append($vid);
-			$vid[0].src = curFile.src;
-			textureSource = $vid[0];
-		} else { // download instead
-			alert("Video not loaded. Please try downloading file instead.");
-			return;
-		}
+	var is360 = true;
+	if (typeof thiz == 'string') {
+		var textureSource = type.startsWith('image') ?
+			   $('<img src="' + thiz + '" />')[0] :
+			   $('<video src="' + thiz + '" loop="true" crossOrigin="anonymous" autoplay playsinline></video>')[0];
+		$divShow.append(textureSource);
 	} else {
-		$img[0].src = curFile.src.replace("thumbfile", "getfile");
-		textureSource = $img[0];
-		$divShow.append($img);
+		curFile = thiz;
+		var is360 = curFile.parentNode.getAttribute('fname').startsWith("360");
+		var isVideo = curFile.tagName == 'VIDEO';
+		var textureSource = null;
+		if (isVideo) {
+			if (curFile.readyState === 4) {
+				$divShow.append($vid);
+				$vid[0].src = curFile.src;
+				textureSource = $vid[0];
+			} else { // download instead
+				alert("Video not loaded. Please try downloading file instead.");
+				return;
+			}
+		} else {
+			$img[0].src = curFile.src.replace("thumbfile", "getfile");
+			textureSource = $img[0];
+			$divShow.append($img);
+		}
 	}
 	
 	$('body, body > div').addClass('stop-scrolling');
@@ -44,20 +53,5 @@ function showFile(thiz) {
 		G.init();
 		G.setTextureSource(textureSource);
 	}
+	document.body.requestFullscreen();
 }
-$(document).ready(function() {
-	$('div[filename]').each(function() {
-		var thiz = $(this);
-		var filename = thiz.attr('filename');
-		var filepath = thiz.attr('filepath');
-		var filetime = thiz.attr('filetime');
-		thiz.text('');
-		thiz.attr('class', 'inline');
-		if (filename.toLowerCase().endsWith("jpg")) {
-			$('<div class="box" fname="'+filename+'"><img src="?thumbfile='+filepath+'" onclick="showFile(this)" /></div><a class="smalltext" href="?getfile='+filepath+'">'+filename+'<br/>'+filetime+' Kb</a>').appendTo(this);
-		} else {
-			$('<div class="box" fname="'+filename+'"><video src="?vidfile='+filepath+'" preload="metadata" onclick="showFile(this)" /></div><a class="smalltext" href="?getfile='+filepath+'">'+filename+'<br/>'+filetime+' Kb</a>').appendTo(this);
-		}
-		$('<a class="del" href="?rmfile='+filepath+'">DELETE</a>').appendTo(this);
-	});
-});

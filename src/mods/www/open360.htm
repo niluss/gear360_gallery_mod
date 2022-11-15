@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gear 360 Gallery Mod</title>
+<link rel="icon" type="image/x-icon" href="./favicon.png">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="mobile-web-app-capable" content="no">
+<script src="./jquery-3.6.1.min.js"></script>
+<script src="./hammer.min.js"></script>
+<script src="./three.min.js"></script>
+<script src="./js/postprocessing/EffectComposer.js"></script>
+<script src="./js/postprocessing/RenderPass.js"></script>
+<script src="./js/postprocessing/ShaderPass.js"></script>
+<script src="./js/shaders/CopyShader.js"></script>
+<script src="./js/shaders/FXAAShader.js"></script>
+<script src="./gallery.js"></script>
+<script src="./gallery-3d.js"></script>
+<script>
+window.G = Viewer.instance;
+$(() => {
+	var $file = $('#fileInp');
+	$file.change((e) => {
+		var file = e.target.files[0];
+		var type = file.type;
+		var fileURL = URL.createObjectURL(file);
+		
+		console.log('file url:', fileURL, 'type:', type);
+		showFile(fileURL, type);
+	});
+});
+</script>
+<link rel="stylesheet" type="text/css" href="./gallery.css">
+</head>
+<body>
+<div>
+<div style="margin: -10px; text-align: center">
+<label for="fileInp" style="cursor: pointer">
+<input id="fileInp" type="file" accept="video/* images/*" style="display: none" />
+<img src="./choose-file.jpg" style="width: 50%; height: 50%" />
+</label>
+<br/>
+<p style="font-size: 8px">
+<a href="https://www.freepik.com/free-photo/earth-with-drawings-around_935240.htm#query=media%20file%20icon&position=32&from_view=search&track=sph">Image by creativeart</a> on Freepik
+<br/>
+<a href="https://www.freepik.com/free-vector/mouse-cursor-pointer-3d-style_15245812.htm#query=pointer%20icon&position=25&from_view=search&track=sph">Image by starline</a> on Freepik
+</p>
+</div>
+<div class="hidden"></div>
+<div>
+</body></html>

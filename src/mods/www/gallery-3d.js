@@ -26,6 +26,8 @@ uniform float blurBottomRadius;
 uniform float blurAtRadius;
 uniform float cropFactor;
 uniform float fov;
+uniform float vignetteFix;
+uniform float vignetteFixRadius;
 uniform sampler2D tex;
 
 const vec3 AXIS_X = vec3(1.0, 0.0, 0.0);
@@ -57,6 +59,7 @@ vec2 toUV(vec3 pos, out float f) {
 	} else {	
 		float a = getAngle(abspos, AXIS_Z);
 		float angleFromCenter = capValue(a / RAD90);
+		f = angleFromCenter;
 		uv = normalize(abspos.xy) * angleFromCenter;
 		if (sign(pos.x) != 0.0) uv.x *= sign(pos.x);
 		if (sign(pos.y) != 0.0) uv.y *= sign(pos.y);
@@ -80,6 +83,12 @@ void main() {
 		float range = 1.0 - blurAtRadius;
 		float f = capValue((r - blurAtRadius) / range);
 		color = mix(color, color2, f / 2.0);
+	}
+	if (r > vignetteFixRadius) {
+		float range = 1.0 - vignetteFixRadius;
+		float f = capValue((r - vignetteFixRadius) / range);
+		color *= 1.0 + (f * vignetteFix);
+		//color.x = 1.0;
 	}
 	fragColor = vec4( color, 1.0 );
 }`;
@@ -172,6 +181,8 @@ void main() {
 				outerPixelPushForwardFactor: {value: 1.4},
 				outerPixelPushOutwardFactor: {value: 1.0},
 				tex: {value: this.texture}, 
+				vignetteFix: {value: 0.3},
+				vignetteFixRadius: {value: 0.75}
 			};
 			this.setWideness('ultra');
 			
@@ -206,11 +217,10 @@ void main() {
 			isMouseDown = true;
 			prevX = getInpX();
 			prevY = getInpY();
-			prevP = 1.0;
 		});
 		$(document).bind('mouseup touchend', (event) => { 
 			isMouseDown = false;
-			prevP = 1.0;
+			prevP = 0;
 		});
 		$(document).bind('mousemove touchmove', (event) => {
 			if (isMouseDown) {
@@ -247,6 +257,7 @@ void main() {
 		var pinch = new Hammer.Pinch();
 		mc.add([pinch]);
 		mc.on("pinch", function(ev) {
+			if (prevP == 0) prevP = ev.scale;
 			var change = -(ev.scale - prevP) * 100;
 			changeFov(change);
 			prevP = ev.scale;
