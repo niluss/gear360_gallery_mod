@@ -55,3 +55,19 @@ function showFile(thiz, type) {
 	}
 	document.body.requestFullscreen();
 }
+$(document).ready(function() {
+	$('div[filename]').each(function() {
+		var thiz = $(this);
+		var filename = thiz.attr('filename');
+		var filepath = thiz.attr('filepath');
+		var filetime = thiz.attr('filetime');
+		thiz.text('');
+		thiz.attr('class', 'inline');
+		if (filename.toLowerCase().endsWith("jpg")) {
+			$('<div class="box" fname="'+filename+'"><img src="?thumbfile='+filepath+'" onclick="showFile(this)" /></div><a class="smalltext" href="?getfile='+filepath+'">'+filename+'<br/>'+filetime+' Kb</a>').appendTo(this);
+		} else {
+			$('<div class="box" fname="'+filename+'"><video src="?vidfile='+filepath+'" preload="metadata" onclick="showFile(this)" /></div><a class="smalltext" href="?getfile='+filepath+'">'+filename+'<br/>'+filetime+' Kb</a>').appendTo(this);
+		}
+		$('<a class="del" href="?rmfile='+filepath+'">DELETE</a>').appendTo(this);
+	});
+});
